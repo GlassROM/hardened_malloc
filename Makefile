@@ -1,5 +1,7 @@
 VARIANT := default
 
+CC := clang
+
 ifneq ($(VARIANT),)
     CONFIG_FILE := config/$(VARIANT).mk
     include config/$(VARIANT).mk
@@ -19,9 +21,10 @@ endef
 
 CPPFLAGS := $(CPPFLAGS) -D_GNU_SOURCE -I include
 SHARED_FLAGS := -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt \
-    -fstack-clash-protection $(call safe_flag,-fcf-protection) -fstack-protector-strong \
+    -ffunction-sections -fdata-sections \
+    -fstack-clash-protection -D_FORTIFY_SOURCE=3 -flto -fsanitize=cfi -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fwrapv -fomit-frame-pointer -g0 -fzero-call-used-regs=all -ftrivial-auto-var-init=zero -fcf-protection=full -fstack-protector-all \
     -Wall -Wextra $(call safe_flag,-Wcast-align=strict,-Wcast-align) -Wcast-qual -Wwrite-strings \
-    -Wundef
+    -Wundef -Wno-unused-command-line-argument
 
 ifeq ($(CONFIG_WERROR),true)
     SHARED_FLAGS += -Werror
@@ -36,8 +39,8 @@ ifeq ($(CONFIG_UBSAN),true)
 endif
 
 CFLAGS := $(CFLAGS) -std=c17 $(SHARED_FLAGS) -Wmissing-prototypes -Wstrict-prototypes
-CXXFLAGS := $(CXXFLAGS) -std=c++17 -fsized-deallocation $(SHARED_FLAGS)
-LDFLAGS := $(LDFLAGS) -Wl,-O1,--as-needed,-z,defs,-z,relro,-z,now,-z,nodlopen,-z,text
+CXXFLAGS := $(CXXFLAGS) -std=c++17 -fsized-deallocation -D_GLIBCXX_ASSERTIONS $(SHARED_FLAGS)
+LDFLAGS := $(LDFLAGS) -Wl,-O3,--as-needed,-z,defs,-z,relro,-z,now,-z,nodlopen,-z,text -flto -Wl,--gc-sections
 
 SOURCES := chacha.c h_malloc.c memory.c pages.c random.c util.c
 OBJECTS := $(SOURCES:.c=.o)
