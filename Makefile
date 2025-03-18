@@ -40,7 +40,7 @@ endif
 
 CFLAGS := $(CFLAGS) -std=c17 $(SHARED_FLAGS) -Wmissing-prototypes -Wstrict-prototypes
 CXXFLAGS := $(CXXFLAGS) -std=c++17 -fsized-deallocation -D_GLIBCXX_ASSERTIONS $(SHARED_FLAGS)
-LDFLAGS := $(LDFLAGS) -Wl,-O3,--as-needed,-z,defs,-z,relro,-z,now,-z,nodlopen,-z,text -flto -Wl,--gc-sections
+LDFLAGS := $(LDFLAGS) -Wl,-O3,--as-needed,-z,defs,-z,relro,-z,now,-z,nodlopen,-z,text,-z,noexecstack -flto -Wl,--gc-sections
 
 SOURCES := chacha.c h_malloc.c memory.c pages.c random.c util.c
 OBJECTS := $(SOURCES:.c=.o)
