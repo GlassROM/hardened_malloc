@@ -22,7 +22,7 @@ endef
 CPPFLAGS := $(CPPFLAGS) -D_GNU_SOURCE -I include
 SHARED_FLAGS := -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt \
     -ffunction-sections -fdata-sections \
-    -fstack-clash-protection -D_FORTIFY_SOURCE=3 -flto -fsanitize=cfi -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fwrapv -fomit-frame-pointer -g0 -fzero-call-used-regs=all -ftrivial-auto-var-init=zero -fcf-protection=full -fstack-protector-all \
+    -fstack-clash-protection -D_FORTIFY_SOURCE=3 -flto -fsanitize=cfi,undefined,bounds -fsanitize-trap=all -fno-sanitize-recover=all -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fwrapv -fomit-frame-pointer -g0 -fzero-call-used-regs=all -ftrivial-auto-var-init=zero -fcf-protection=full -fstack-protector-all \
     -Wall -Wextra $(call safe_flag,-Wcast-align=strict,-Wcast-align) -Wcast-qual -Wwrite-strings \
     -Wundef -Wno-unused-command-line-argument
 
@@ -40,7 +40,7 @@ endif
 
 CFLAGS := $(CFLAGS) -std=c17 $(SHARED_FLAGS) -Wmissing-prototypes -Wstrict-prototypes
 CXXFLAGS := $(CXXFLAGS) -std=c++17 -fsized-deallocation -D_GLIBCXX_ASSERTIONS $(SHARED_FLAGS)
-LDFLAGS := $(LDFLAGS) -Wl,-O3,--as-needed,-z,defs,-z,relro,-z,now,-z,nodlopen,-z,text,-z,noexecstack -flto -Wl,--gc-sections
+LDFLAGS := $(LDFLAGS) -Wl,-O3,--as-needed,-z,defs,-z,relro,-z,now,-z,nodlopen,-z,text,-z,noexecstack -flto -Wl,--gc-sections -Wl,--strip-all
 
 SOURCES := chacha.c h_malloc.c memory.c pages.c random.c util.c
 OBJECTS := $(SOURCES:.c=.o)
