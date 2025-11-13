@@ -24,7 +24,7 @@ SHARED_FLAGS := -pipe -O3 -flto -fPIC -fvisibility=hidden -fno-plt \
     -ffunction-sections -fdata-sections \
     -fstack-clash-protection -D_FORTIFY_SOURCE=3 -flto -fsanitize=cfi,undefined,bounds -fsanitize-trap=all -fno-sanitize-recover=all -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-strict-overflow -fwrapv -fomit-frame-pointer -g0 -fzero-call-used-regs=all -ftrivial-auto-var-init=zero -fcf-protection=full -fstack-protector-all \
     -Wall -Wextra $(call safe_flag,-Wcast-align=strict,-Wcast-align) -Wcast-qual -Wwrite-strings \
-    -Wundef -Wno-unused-command-line-argument
+    -Wundef -Wno-unused-command-line-argument -Wno-unterminated-string-initialization
 
 ifeq ($(CONFIG_WERROR),true)
     SHARED_FLAGS += -Werror
